@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Shnuk — выборы</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+    color: #222;
+  }
+  h1 { text-align: center; }
+  .card {
+    background: #fff;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  th { background: #f0f0f0; }
+  .avg { font-weight: bold; background: #fafafa; }
+</style>
+</head>
+<body>
+
+<h1>Компания Shnuk — выборы 1</h1>
+
+<div class="card">
+  <canvas id="chart" height="120"></canvas>
+</div>
+
+<div class="card">
+  <h2>Результаты выборов 1</h2>
+  <table id="avgTable">
+    <thead>
+      <tr>
+        <th>Партия</th>
+        <th>Процент</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+const elections = [1];
+
+const parties = {
+  "Единый Шнюк": [66.67],
+  "Партия Русского языка": [33.33]
+};
+
+const colors = {
+  "Единый Шнюк": "#e74c3c",
+  "Партия Русского языка": "#3498db"
+};
+
+// --- График ---
+const datasets = Object.keys(parties).map(name => ({
+  label: name,
+  data: parties[name],
+  borderColor: colors[name],
+  backgroundColor: colors[name] + "33",
+  borderWidth: 3,
+  tension: 0,
+  spanGaps: true,
+  pointRadius: 4,
+  pointHoverRadius: 6
+}));
+
+new Chart(document.getElementById("chart"), {
+  type: "line",
+  data: {
+    labels: elections.map(n => "Выборы " + n),
+    datasets: datasets
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Результаты выборов Shnuk (%)",
+        font: { size: 16 }
+      },
+      legend: { position: "bottom" }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+        title: { display: true, text: "Процент голосов" }
+      },
+      x: {
+        title: { display: true, text: "Выборы" }
+      }
+    }
+  }
+});
+
+// --- Таблица ---
+const tbody = document.querySelector("#avgTable tbody");
+Object.keys(parties).forEach(name => {
+  const values = parties[name].filter(v => v !== null);
+  const avg = values.reduce((a, b) => a + b, 0) / values.length;
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td>${name}</td><td class="avg">${avg.toFixed(2)}%</td>`;
+  tbody.appendChild(tr);
+});
+</script>
+
+</body>
+</html>
