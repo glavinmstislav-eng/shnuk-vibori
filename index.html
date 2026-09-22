@@ -36,19 +36,21 @@
 </head>
 <body>
 
-<h1>Компания Shnuk — выборы 1</h1>
+<h1>Компания Shnuk — выборы 1 и 2</h1>
 
 <div class="card">
   <canvas id="chart" height="120"></canvas>
 </div>
 
 <div class="card">
-  <h2>Результаты выборов 1</h2>
+  <h2>Результаты выборов</h2>
   <table id="avgTable">
     <thead>
       <tr>
         <th>Партия</th>
-        <th>Процент</th>
+        <th>Выборы 1</th>
+        <th>Выборы 2</th>
+        <th>Средний %</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -56,16 +58,18 @@
 </div>
 
 <script>
-const elections = [1];
+const elections = [1, 2];
 
 const parties = {
-  "Единый Шнюк": [66.67],
-  "Партия Русского языка": [33.33]
+  "Единый Шнюк":            [66.67, 76.47],
+  "Партия Русского языка":  [33.33, 17.65],
+  "Вольга Святославич":     [null,  5.88]
 };
 
 const colors = {
-  "Единый Шнюк": "#e74c3c",
-  "Партия Русского языка": "#3498db"
+  "Единый Шнюк":            "#e74c3c",
+  "Партия Русского языка":  "#3498db",
+  "Вольга Святославич":     "#9b59b6"
 };
 
 // --- График ---
@@ -115,8 +119,10 @@ const tbody = document.querySelector("#avgTable tbody");
 Object.keys(parties).forEach(name => {
   const values = parties[name].filter(v => v !== null);
   const avg = values.reduce((a, b) => a + b, 0) / values.length;
+  const v1 = parties[name][0] !== null ? parties[name][0].toFixed(2) + "%" : "—";
+  const v2 = parties[name][1] !== null ? parties[name][1].toFixed(2) + "%" : "—";
   const tr = document.createElement("tr");
-  tr.innerHTML = `<td>${name}</td><td class="avg">${avg.toFixed(2)}%</td>`;
+  tr.innerHTML = `<td>${name}</td><td>${v1}</td><td>${v2}</td><td class="avg">${avg.toFixed(2)}%</td>`;
   tbody.appendChild(tr);
 });
 </script>
